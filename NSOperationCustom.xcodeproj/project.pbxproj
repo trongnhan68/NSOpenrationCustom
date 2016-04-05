@@ -17,6 +17,7 @@
 		DAAEED141CAD1B6E000B47D8 /* TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAEED131CAD1B6E000B47D8 /* TableViewCell.m */; };
 		DAAEED171CAD26AE000B47D8 /* BindingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAEED161CAD26AE000B47D8 /* BindingObject.m */; };
 		DAAEED1A1CAE0622000B47D8 /* ImageViewCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAEED191CAE0622000B47D8 /* ImageViewCustom.m */; };
+		DAFDF0F11CB3658F00068D84 /* OperationCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = DAFDF0F01CB3658F00068D84 /* OperationCustom.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,8 @@
 		DAAEED161CAD26AE000B47D8 /* BindingObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BindingObject.m; sourceTree = "<group>"; };
 		DAAEED181CAE0622000B47D8 /* ImageViewCustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewCustom.h; sourceTree = "<group>"; };
 		DAAEED191CAE0622000B47D8 /* ImageViewCustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewCustom.m; sourceTree = "<group>"; };
+		DAFDF0EF1CB3658F00068D84 /* OperationCustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OperationCustom.h; sourceTree = "<group>"; };
+		DAFDF0F01CB3658F00068D84 /* OperationCustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OperationCustom.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +90,8 @@
 				DAAEED161CAD26AE000B47D8 /* BindingObject.m */,
 				DAAEED181CAE0622000B47D8 /* ImageViewCustom.h */,
 				DAAEED191CAE0622000B47D8 /* ImageViewCustom.m */,
+				DAFDF0EF1CB3658F00068D84 /* OperationCustom.h */,
+				DAFDF0F01CB3658F00068D84 /* OperationCustom.m */,
 			);
 			path = NSOperationCustom;
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAFDF0F11CB3658F00068D84 /* OperationCustom.m in Sources */,
 				DAAEED001CAD14FA000B47D8 /* ViewController.m in Sources */,
 				DAAEED111CAD16A0000B47D8 /* DownloadImage.m in Sources */,
 				DAAEED171CAD26AE000B47D8 /* BindingObject.m in Sources */,
@@ -322,6 +328,7 @@
 				DAAEED0E1CAD14FA000B47D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

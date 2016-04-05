@@ -7,11 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OperationCustom.h"
+
+
 
 @interface ViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-
+@property (nonatomic) PendingOperation *pendingOperation;
 
 @end
 
+@interface ImageDetail : NSObject
+
+@property (nonatomic) BOOL isDownloaded;
+@property (nonatomic, strong) UIImage* imgData;
+@property (nonatomic, strong) NSString* imgUrl;
+
+@end

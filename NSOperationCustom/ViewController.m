@@ -11,13 +11,7 @@
 #import "BindingObject.h"
 #import "TableViewCell.h"
 
-@interface ImageDetail : NSObject
 
-@property (nonatomic) BOOL isDownloaded;
-@property (nonatomic, strong) UIImage* imgData;
-@property (nonatomic, strong) NSString* imgUrl;
-
-@end
 
 @implementation ImageDetail
 - (instancetype)init {
@@ -52,8 +46,10 @@
         ImageDetail *item = [[ImageDetail alloc] init];
         item.imgUrl = listUrl[num];
         [arrData addObject:item];
+        
     }
     
+    self.pendingOperation = [[PendingOperation alloc] init];
     
 }
 
@@ -67,32 +63,101 @@
     TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell) {
         [cell.btn setTitle:[NSString stringWithFormat:@"%li",indexPath.row] forState:UIControlStateNormal];
-        int num = arc4random_uniform(4);
-        
-        [cell.imgView setCallbackIndex:indexPath];
         ImageDetail *itemData = arrData[indexPath.row];
-        if (itemData.isDownloaded == NO) {
-            [BindGetSingleForProtocol(DownloadImageProtocol) downloadImage:itemData.imgUrl toImageView:cell.imgView withBlock:^(id responseData, int indexPathRow, BOOL success) {
-
-                if (indexPathRow == indexPath.row) {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        UIImage *img = (UIImage*)responseData;
-                        
-                        [cell.imgView setImage:img];
-                        itemData.imgData = img;
-                        itemData.isDownloaded = YES;
-                           
-                    }];
-                }
-                
-            }];
-        } else {
-        
         [cell.imgView setImage:itemData.imgData];
+        
+        if (itemData.isDownloaded == NO) {
+            [self startDownloadForRecord:itemData indexPath:indexPath];
         }
         
     }
     return cell;
+}
+
+- (void) startDownloadForRecord:(ImageDetail*)photoDetail indexPath:(NSIndexPath*)indexPath {
+
+    if (photoDetail.isDownloaded == YES) return;
+    
+    
+    if ([self.pendingOperation.downloadsInProgress objectForKey:indexPath]) {
+        return;
+    }
+
+    OperationCustom *downloader = [[OperationCustom alloc] init];
+    [downloader initWithImageDetail:photoDetail];
+    __weak OperationCustom *weakDownloader = downloader;
+    downloader.completionBlock = ^{
+        if (weakDownloader.cancelled) {
+            return;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            NSLog(@"Downloaded: %li", indexPath.row);
+            
+            [self.pendingOperation.downloadsInProgress removeObjectForKey:indexPath];
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade ];
+        });
+        
+    };
+    
+    [self.pendingOperation.downloadsInProgress setObject:downloader forKey:indexPath];
+    [self.pendingOperation.downloadQueue addOperation:downloader];
+    
+    
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    
+    [self suspendAllOperation];
+    
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [self reloadVisibleCell];
+    [self ressumeAllOperation];
+    
+}
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    
+    if (decelerate == NO) {
+        [self reloadVisibleCell];
+        [self ressumeAllOperation];
+        
+    }
+}
+- (void)suspendAllOperation{
+    self.pendingOperation.downloadQueue.suspended = YES;
+    
+}
+- (void)ressumeAllOperation{
+    
+    self.pendingOperation.downloadQueue.suspended = NO;
+}
+
+
+- (void) reloadVisibleCell{
+    [self cancelPendingOpenration];
+    
+    for (TableViewCell *cell in self.tableView.visibleCells) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        ImageDetail *itemData = arrData[indexPath.row];
+        [self startDownloadForRecord:itemData indexPath:indexPath];
+        
+    }
+
+}
+
+- (void)cancelPendingOpenration{
+
+  
+    NSArray *listKeys = [self.pendingOperation.downloadsInProgress allKeys];
+    for (NSIndexPath *index in listKeys) {
+    
+        [[self.pendingOperation.downloadsInProgress objectForKey:index] cancel];
+        [self.pendingOperation.downloadsInProgress removeObjectForKey:index];
+    }
+    
+
 }
 
 

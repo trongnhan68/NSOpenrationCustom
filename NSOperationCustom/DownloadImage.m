@@ -55,11 +55,13 @@
 }
 
 - (void)suspendAllOperation{
-
-    
+    self.queue.suspended = YES;
 
 }
+- (void)ressumeAllOperation{
 
+    self.queue.suspended = NO;
+}
 - (void)removeDownloadingIndex:(int)index {
     
     NSString *key = [NSString stringWithFormat:@"%i",index];
